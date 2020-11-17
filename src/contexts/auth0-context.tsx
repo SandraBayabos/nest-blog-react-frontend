@@ -1,5 +1,5 @@
 import React, { Component, createContext, useContext } from "react";
-import createAuth0Client from "@auth0/auth0-spa-js";
+import createAuth0Client, { Auth0ClientOptions } from "@auth0/auth0-spa-js";
 import Auth0Client from "@auth0/auth0-spa-js";
 
 
@@ -46,6 +46,52 @@ interface IState {
   isAuthenticated: boolean,
   user?: any;
 }
-export class Auth0Provider extends Component<{}, IState > {}
 
+/*
+Create an Auth0Provider component and initialized Auth0 SPA SDK by passing 
+the appropriate configuration to it through the private config() method 
+with a type of Auth0ClientOptions to the initializeAuth0() method. 
+Then call the initializeAuth0() method once the component is mounted.
 
+Auth0 authentication process works by redirecting a user to an Auth0 universal login page 
+from your application. Once this is successful, the user will be redirected back to your application 
+with some additional contents in the URL, such as an authentication code. 
+To properly handle this redirection, you checked for code= in the URL. 
+If it exists, you will then call a handleRedirectCallback() method
+*/
+
+export class Auth0Provider extends Component<{}, IState > {
+  // initialising the Auth0 SPA SDK with the appropriate configuration options
+  constructor(props: any) {
+    super(props)
+    this.state = {
+      isLoading: true,
+      isAuthenticated: false,
+      user: null,
+      auth0Client: Auth0Client
+    };
+  }
+  config: Auth0ClientOptions = {
+    domain: `${process.env.REACT_APP_AUTH0_DOMAIN}`,
+    client_id: `${process.env.REACT_APP_AUTH0_CLIENT_ID}`,
+    redirect_uri: window.location.origin
+  };
+  componentDidMount() {
+    this.initializeAuth0();
+  }
+  // initialize the Auth0 library
+  initializeAuth0 = async () => {
+    const auth0Client = await createAuth0Client(this.config);
+    this.setState({ auth0Client });
+    // check to see if they have redirected after login
+    if(window.location.search.includes('code=')) {
+      return this.handleRedirectCallback();
+    }
+    const isAuthenticated = await auth0Client.isAuthenticated();
+    const user = isAuthenticated ? await auth0Client.getUser() : null;
+    this.setState({ isLoading: false, isAuthenticated, user });
+  };
+  render() {
+
+  }
+}
