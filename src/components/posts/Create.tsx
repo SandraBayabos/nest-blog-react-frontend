@@ -79,8 +79,40 @@ function Create(): JSX.Element {
   }
 
   return (
-    <div>
-      
+    <div className={'page-wrapper'}>
+      {post && 
+        <div className={'col-md-1 form-wrapper'}>
+          <h2>Edit Post</h2>
+          {submitSuccess && (
+            <div className="alert alert-info" role="alert">
+              The post has been edited successfully!
+            </div>
+          )}
+
+          <form id={'create-post-form'} onSubmit={handleFormSubmission} noValidate={true}>
+            <div className="form-group col-md-12">
+              <label htmlFor="title">Title</label>
+              <input type="text" id="title" defaultValue={post.title} onChange={(e) => handleInputChanges(e)} name="title" className="form-control" placeholder="Enter Title"/>
+            </div>
+            <div className="form-group col-md-12">
+              <label htmlFor="description">Description</label>
+              <input type="text" id="description" defaultValue={post.description} onChange={(e) => handleInputChanges(e)} name="description" className="form-control" placeholder="Enter Description"/>
+            </div>
+            <div className="form-group col-md-12">
+              <label htmlFor="body">Write Content</label>
+              <input type="text" id="body" defaultValue={post.body} onChange={(e) => handleInputChanges(e)} name="body" className="form-control" placeholder="Enter Content"/>
+            </div>
+            <div className="form-group col-md-4 pull-right">
+              <button className="btn btn-success" type="submit">
+                Edit Post
+              </button>
+              {loading && 
+              <span className="fa fa-circle-o-notch fa-spin" />
+              }
+            </div>
+          </form>
+        </div>
+      } 
     </div>
   )
 }
