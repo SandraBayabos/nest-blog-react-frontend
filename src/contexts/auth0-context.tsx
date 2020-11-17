@@ -91,7 +91,26 @@ export class Auth0Provider extends Component<{}, IState > {
     const user = isAuthenticated ? await auth0Client.getUser() : null;
     this.setState({ isLoading: false, isAuthenticated, user });
   };
-  render() {
 
+  handleRedirectCallback = async () => {
+    this.setState({ isLoading: true });
+    await this.state.auth0Client.handleRedirectCallback();
+    const user = await this.state.auth0Client.getUser();
+    this.setState({ user, isAuthenticated: true, isLoading: false });
+    window.history.replaceState({}, document.title, window.location.pathname)
+  };
+  render() {
+    const { auth0Client, isLoading, isAuthenticated, user } = this.state;
+    const { children } = this.props;
+    const configObject = {
+      isLoading,
+      isAuthenticated,
+      user,
+      loginWithRedirect: (...p: any) => auth0Client.loginWithRedirect(...p),
+            getTokenSilently: (...p: any) => auth0Client.getTokenSilently(...p),
+            getIdTokenClaims: (...p: any) => auth0Client.getIdTokenClaims(...p),
+            logout: (...p: any) => auth0Client.logout(...p)
+    };
+    return <Auth0Context.Provider value={configObject}>{children}</Auth0Context.Provider>
   }
 }
