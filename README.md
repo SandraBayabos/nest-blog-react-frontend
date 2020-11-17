@@ -2,6 +2,8 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+Following tutorial from [Modern Full-Stack Development with Nest.js, React, TypeScript, and MongoDB: Part 2](https://auth0.com/blog/modern-full-stack-development-with-nestjs-react-typescript-and-mongodb-part-2/)
+
 ## Available Scripts
 
 In the project directory, you can run:
