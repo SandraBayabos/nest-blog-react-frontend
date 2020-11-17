@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { useAuth0 } from '../../contexts/auth0-context';
+import { useAuth0 } from '../contexts/auth0-context';
 
 function Home(): JSX.Element {
   let history = useHistory();
   const { user, isAuthenticated, getIdTokenClaims } = useAuth0();
-  const [posts, setPosts] = useState();
+  const [posts, setPosts] = useState([]);
 
   /*
   Created method named deletePost() to delete a single post. 
